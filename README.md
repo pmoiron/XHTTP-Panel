@@ -9,6 +9,11 @@
 </p>
 
 <p align="center">
+  <a href="https://t.me/avaco_cloud"><img src="https://img.shields.io/badge/Telegram-avaco__cloud-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram" /></a>
+  <a href="https://youtube.com/@avacocloud"><img src="https://img.shields.io/badge/YouTube-avaco__cloud-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="YouTube" /></a>
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs" alt="Next.js" />
   <img src="https://img.shields.io/badge/Express-4-000?logo=express" alt="Express" />
   <img src="https://img.shields.io/badge/TypeScript-5.7-3178c6?logo=typescript&logoColor=white" alt="TypeScript" />

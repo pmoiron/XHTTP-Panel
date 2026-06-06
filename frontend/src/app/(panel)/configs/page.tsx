@@ -40,9 +40,9 @@ interface AllLinks {
   deployLinks: DeployLink[];
 }
 
-function LinkCard({ label, sublabel, link, platform, checkUrl, deployId, onDeleted }: {
+function LinkCard({ label, sublabel, link, platform, checkUrl, checkPath, deployId, onDeleted }: {
   label: string; sublabel?: string; link: string; platform?: string; checkUrl?: string;
-  deployId?: number; onDeleted?: () => void;
+  checkPath?: string; deployId?: number; onDeleted?: () => void;
 }) {
   const [copied, setCopied] = useState(false);
   const [showQR, setShowQR] = useState(false);
@@ -77,7 +77,9 @@ function LinkCard({ label, sublabel, link, platform, checkUrl, deployId, onDelet
     setChecking(true);
     setCheckResult(null);
     try {
-      const r = await api.get(`/configs/check-relay?url=${encodeURIComponent(checkUrl)}`);
+      const params = new URLSearchParams({ url: checkUrl });
+      if (checkPath) params.set("path", checkPath);
+      const r = await api.get(`/configs/check-relay?${params.toString()}`);
       setCheckResult(r.data);
     } catch {
       setCheckResult({ ok: false, status: 0, ms: 0 });
@@ -250,6 +252,7 @@ export default function ConfigsPage() {
                   link={d.configLink}
                   platform={d.platform}
                   checkUrl={d.url}
+                  checkPath={d.publicPath}
                   deployId={d.id}
                   onDeleted={loadLinks}
                 />

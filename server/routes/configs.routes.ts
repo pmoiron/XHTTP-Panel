@@ -74,26 +74,40 @@ router.get("/all-links", requireAuth, (_req, res) => {
         } catch {}
       }
 
-      return { id: d.id, platform: d.platform, projectName: d.project_name, url: d.deploy_url, configLink };
+      return { id: d.id, platform: d.platform, projectName: d.project_name, url: d.deploy_url, publicPath: d.public_path || "/api", configLink };
     })
     .filter((d) => d.configLink);
 
   res.json({ serverLink, deployLinks });
 });
 
-// Test if a relay URL is reachable
+// Test if a relay URL is reachable — hit the relay path directly (not /health which doesn't exist)
 router.get("/check-relay", requireAuth, async (req, res) => {
   const url = req.query.url as string;
+  const path = (req.query.path as string) || "/api";
   if (!url) {
     res.status(400).json({ error: "url query param required" });
     return;
   }
 
-  const testUrl = url.replace(/\/$/, "") + "/health";
+  // Build test URL: base URL + relay path (e.g. https://xxx.netlify.app/api)
+  const base = url.replace(/\/+$/, "");
+  const relayPath = path.startsWith("/") ? path : `/${path}`;
+  const testUrl = `${base}${relayPath}`;
+
   const start = Date.now();
   try {
-    const resp = await fetch(testUrl, { signal: AbortSignal.timeout(10_000) });
-    res.json({ ok: resp.status < 500, status: resp.status, ms: Date.now() - start });
+    const resp = await fetch(testUrl, {
+      method: "POST",
+      signal: AbortSignal.timeout(10_000),
+      headers: { "Content-Type": "application/octet-stream" },
+      body: "",
+    });
+    // For XHTTP relay: 4xx = relay is alive (xray rejects invalid handshake),
+    // 5xx = relay broken or env vars missing, 2xx = also fine
+    const ms = Date.now() - start;
+    const ok = resp.status < 500;
+    res.json({ ok, status: resp.status, ms });
   } catch (err) {
     res.json({ ok: false, status: 0, ms: Date.now() - start, error: String(err) });
   }
