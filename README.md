@@ -28,6 +28,18 @@
 
 ---
 
+## نصب سریع
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/avacocloud/XHTTP-Panel/main/install.sh)
+```
+
+همین. بقیه‌ش خودکاره.
+
+**پیش‌نیازها:** سرور Ubuntu 20.04+ · دامنه · دسترسی root
+
+---
+
 ## چیه این؟
 
 XHTTP Panel یه **داشبورد وب self-hosted** هست که جایگزین کار دستی با CLI برای دیپلوی و مدیریت سرورهای ریلی VLESS+XHTTP میشه. به جای SSH زدن و اجرای دستورات، یه UI تمیز داری با دیپلوی یک‌کلیکی، پراگرس زنده، و مدیریت کامل.
@@ -323,35 +335,9 @@ XHTTP Panel یه **داشبورد وب self-hosted** هست که جایگزین 
 
 ---
 
-## نصب سریع
+## نصب دستی (اختیاری)
 
-### پیش‌نیازها
-- سرور Ubuntu 20.04+
-- Node.js 20+
-- Xray-core نصب و کانفیگ شده
-- گواهی SSL (از acme.sh)
-
-### نصب
-
-```bash
-cd /root
-git clone <repo-url> xhttp-panel
-cd xhttp-panel
-
-# نصب وابستگی‌ها
-npm install
-
-# بیلد (کامپایل TypeScript + کپی فرانت‌اند)
-npm run build
-
-# اجرا با PM2
-pm2 start dist/server/index.js --name xhttp-panel
-pm2 save
-
-# نصب CLI
-cp xhttp-info.sh /usr/local/bin/xhttp-info
-chmod +x /usr/local/bin/xhttp-info
-```
+اگه نصب خودکار بالا کار نکرد:
 
 ### اولین ورود
 
