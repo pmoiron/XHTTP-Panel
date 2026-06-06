@@ -45,20 +45,36 @@ bash <(curl -fsSL https://raw.githubusercontent.com/avacocloud/XHTTP-Panel/main/
 
 ---
 
-## آپدیت
+## مدیریت پنل (`xhttp-info`)
 
-### اگه با `install.sh` نصب کردی:
+بعد از نصب، دستور `xhttp-info` روی سرور این امکانات رو میده:
+
 ```bash
-cd /root/xhttp-panel && bash update.sh
+xhttp-info
 ```
 
-### اگه با `xhttp-info` (نسخه قدیمی) نصب کردی:
-```bash
-cd /root
-rm -rf xhttp-panel
-bash <(curl -fsSL https://raw.githubusercontent.com/avacocloud/XHTTP-Panel/main/install.sh)
 ```
-دیتابیس و تنظیمات از نسخه قدیمی منتقل نمیشه — توکن‌ها رو دوباره وارد کنید.
+  [1] Reset admin password     ← فراموشی رمز عبور
+  [2] Change web path          ← تغییر مسیر پنل
+  [3] Update panel             ← آپدیت به آخرین نسخه
+  [q] Quit
+```
+
+### آپدیت پنل:
+```bash
+xhttp-info update
+```
+توکن‌ها، کانفیگ‌ها و دیپلوی‌ها بعد از آپدیت دست‌نخورده باقی می‌مونن.
+
+### ریست رمز عبور:
+```bash
+xhttp-info reset-password
+```
+
+### تغییر مسیر پنل:
+```bash
+xhttp-info set-path
+```
 
 ---
 
