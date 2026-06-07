@@ -78,27 +78,35 @@ do_update() {
     die "No release found on GitHub. Check: https://github.com/${REPO}/releases"
   fi
 
-  # Backup data
+  # Backup data (both dist/data and root data/)
   echo -e "${Y}Backing up data...${N}"
-  [[ -d "$INSTALL_DIR/dist/data" ]] && cp -r "$INSTALL_DIR/dist/data" /tmp/xhttp-panel-data-backup 2>/dev/null || true
+  rm -rf /tmp/xhttp-panel-data-backup
+  for d in "$INSTALL_DIR/dist/data" "$INSTALL_DIR/data"; do
+    if [[ -d "$d" ]]; then
+      mkdir -p /tmp/xhttp-panel-data-backup
+      cp -r "$d"/. /tmp/xhttp-panel-data-backup/ 2>/dev/null || true
+    fi
+  done
+  [[ -d /tmp/xhttp-panel-data-backup ]] && echo -e "${G}✓ Data backed up${N}" || echo -e "${Y}⚠ No existing data found${N}"
 
   # Download
   echo -e "${C}Downloading latest release...${N}"
   curl -fsSL "$RELEASE_URL" -o "/tmp/$TARBALL" || die "Download failed"
   echo -e "${G}✓ Downloaded${N}"
 
-  # Extract
+  # Extract (only replace dist/, keep data/ safe)
   rm -rf "$INSTALL_DIR/dist"
   tar -xzf "/tmp/$TARBALL" -C "$INSTALL_DIR"
   rm -f "/tmp/$TARBALL"
   echo -e "${G}✓ Files updated${N}"
 
-  # Restore data
+  # Restore data to both locations
   if [[ -d /tmp/xhttp-panel-data-backup ]]; then
-    mkdir -p "$INSTALL_DIR/dist/data"
+    mkdir -p "$INSTALL_DIR/dist/data" "$INSTALL_DIR/data"
     cp -r /tmp/xhttp-panel-data-backup/. "$INSTALL_DIR/dist/data/"
+    cp -r /tmp/xhttp-panel-data-backup/. "$INSTALL_DIR/data/"
     rm -rf /tmp/xhttp-panel-data-backup
-    echo -e "${G}✓ Data restored${N}"
+    echo -e "${G}✓ Data restored (DB + encryption key + tokens kept)${N}"
   fi
 
   # Update CLI
