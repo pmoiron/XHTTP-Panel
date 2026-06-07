@@ -3,6 +3,7 @@ import { requireAuth } from "../middleware/auth.js";
 import { execSync, exec } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, writeFileSync, mkdirSync } from "node:fs";
 import { randomUUID } from "node:crypto";
+import { readInstallerState } from "../services/xray.service.js";
 
 const router = Router();
 

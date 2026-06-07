@@ -148,14 +148,6 @@ export async function deployToRailway(
     // ── Step 2: Create project ───────────────────────────────────────────────
     emit(2, "Creating Railway project...");
 
-    let workspaceId = "";
-    try {
-      const meData = await gql<{
-        me: { workspaces: Array<{ id: string }> };
-      }>(params.apiToken, `{ me { workspaces { id } } }`);
-      workspaceId = meData.me?.workspaces?.[0]?.id || "";
-    } catch {}
-
     if (!existingProjectId) {
       try {
         const listData = await gql<{
@@ -175,9 +167,8 @@ export async function deployToRailway(
       runRailway(["link", existingProjectId], tmpDir, params.apiToken);
     } else {
       try {
-        const initArgs = ["init", "--name", params.projectName];
-        if (workspaceId) initArgs.push("--workspace", workspaceId);
-        runRailway(initArgs, tmpDir, params.apiToken);
+        // Railway CLI reads workspace from token context — no --workspace flag needed
+        runRailway(["init", "--name", params.projectName], tmpDir, params.apiToken);
       } catch (err: any) {
         if (err.message.includes("Free plan") || err.message.includes("provision limit")) {
           throw new Error(
