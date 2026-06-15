@@ -32,6 +32,7 @@ interface DeployLink {
   platform: string;
   projectName: string;
   url: string;
+  publicPath: string;
   configLink: string;
 }
 
